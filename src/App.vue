@@ -3,5 +3,7 @@ import UserInputForm from './components/UserInputForm.vue'
 </script>
 
 <template>
-  <UserInputForm />
+  <div class="flex min-h-screen items-center justify-center relative">
+      <UserInputForm />
+    </div><
 </template>

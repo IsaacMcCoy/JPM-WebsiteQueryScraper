@@ -1,1 +1,12 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+body {
+  background-color: aliceblue;
+  font-family: "Times New Roman";
+}
+
+h1 {
+  text-align: center;
+  font-size: 3xl;
+  font-weight: bold;
+}
