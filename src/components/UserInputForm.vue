@@ -21,7 +21,15 @@ function submitParameters() {
     addNewWebScraper(newWebScraper.value)
   }
 }
+//Test API code
+import { onMounted } from 'vue'
+import { testAPI } from '../services/api.ts'
 
+onMounted(async () => {
+  const data = await testAPI()
+
+  console.log(data)
+})
 </script>
 
 <template>
