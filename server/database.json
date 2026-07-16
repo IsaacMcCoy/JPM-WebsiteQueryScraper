@@ -1,0 +1,11 @@
+{
+  "webScrapers": [
+    {
+      "id": 1784236691345,
+      "url": "https://bogus-data.com",
+      "credibility": 75,
+      "updateFrequency": "daily",
+      "keyword": "google"
+    }
+  ]
+}

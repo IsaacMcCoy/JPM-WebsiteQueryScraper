@@ -1,8 +1,8 @@
 import { createServer } from 'node:http'
+import { getDatabase, saveDatabase } from './utils/apiGetDatabase.ts'
 
 const server = createServer((req, res) => {
   res.setHeader("Content-Type", "application/json")
-
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
@@ -15,27 +15,44 @@ const server = createServer((req, res) => {
 
   const url = new URL(req.url ?? "", `http://${req.headers.host}`)
 
-  if (url.pathname === "/api/test" && req.method === "GET") {
-    res.write(
-      JSON.stringify({
-        message: "API running and working"
-      })
-    )
+  if (url.pathname === "/api/webscrapers" && req.method === "POST") {
 
-    res.end()
+    let body = ""
+
+    req.on("data", chunk => {
+      body += chunk
+    })
+
+    req.on("end", async () => {
+
+      const newWebScraper = JSON.parse(body)
+
+      const database = await getDatabase()
+
+      database.webScrapers.push({
+        id: Date.now(),
+        ...newWebScraper
+      })
+
+      await saveDatabase(database)
+
+      res.end(JSON.stringify({
+        message: "Web scraper added"
+      }))
+    })
+  
     return
   }
 
+  //anything that did not match route
   res.statusCode = 404
-  res.write(
-    JSON.stringify({
-      message: "Not Found"
-    })
-  )
-
-  res.end()
+  res.end(JSON.stringify({
+    message: "Not Found"
+  }))
 })
 
-server.listen(3000, () => {
-  console.log("API running on port 3000")
+const PORT = process.env.PORT || 3000
+
+server.listen(PORT, () => {
+  console.log(`API running on port ${PORT}`)
 })
