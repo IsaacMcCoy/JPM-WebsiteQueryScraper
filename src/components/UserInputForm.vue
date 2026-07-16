@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useWebSraper } from '../composables/useWebScraper.ts'
 
-const { webScraperList, newWebScraper, addNewWebScraper } = useWebSraper()
+const { newWebScraper, addNewWebScraper } = useWebSraper()
 
 //frequency is based off of WebScraper.updateFrequency scr/types/webScraper.ts
 const frequency = ['hourly', 'daily', 'weekly', 'monthly', 'yearly']
@@ -26,7 +26,7 @@ function submitParameters() {
 
 <template>
   <div class="min-w-[375px] min-h-[100px] rounded-lg border border-gray-200 p-0">
-    <form @submit.prevent="submitParameters()" class=" rounded-t-md flex flex-col p-6 bg-white gap-2">
+    <form @submit.prevent="submitParameters()" class="rounded-t-md flex flex-col p-6 bg-white gap-2">
 
       <label class="text-[18px] text-black">Website URL</label>
         <input
