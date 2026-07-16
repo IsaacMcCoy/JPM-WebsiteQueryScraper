@@ -74,7 +74,7 @@ function submitParameters() {
             ? 'bg-green-200 text-green-500 border-green-300'
             : 'bg-red-200 text-red-500 border-red-300'
         ]"
-        >Log In
+        >Run Querry
       </button>
 
     </form>
