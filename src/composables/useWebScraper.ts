@@ -2,7 +2,9 @@
 
 import { ref } from 'vue'
 import type { WebScraper } from '../types/webScraper.ts'
-import { webScraperList } from '../services/webScraperServices.ts'
+import { getAllWebScrapers, saveWebScraper } from '../services/webScraperServices.ts'
+
+export const webScraperList = await getAllWebScrapers()
 
 export function useWebScraper() {
   const newWebScraper = ref<WebScraper>({
@@ -12,8 +14,8 @@ export function useWebScraper() {
     keyword: ''
   })
   
-  function addNewWebScraper(addedWebScraper: WebScraper) {
-    webScraperList.value.push(addedWebScraper)
+  async function addNewWebScraper(addedWebScraper: WebScraper) {
+    await saveWebScraper(addedWebScraper) //save added WebScraper to database
   }
 
   return {
