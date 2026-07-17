@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper.ts'
-import { saveWebScraper } from '../services/webScraperServices.ts'
 
 const { newWebScraper, addNewWebScraper } = useWebScraper()
 
@@ -20,7 +19,6 @@ const completeForm = computed(() =>
 function submitParameters() {
   if(completeForm.value) {
     addNewWebScraper(newWebScraper.value)
-    saveWebScraper(newWebScraper.value) //save newWebScraper to database
   }
 }
 </script>

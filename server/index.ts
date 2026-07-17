@@ -1,10 +1,10 @@
 import { createServer } from 'node:http'
 import { getDatabase, saveDatabase } from './utils/apiGetDatabase.ts'
 
-const server = createServer((req, res) => {
+const server = createServer(async (req, res) => {
   res.setHeader("Content-Type", "application/json")
   res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
 
   if(req.method === "OPTIONS") {
@@ -15,32 +15,39 @@ const server = createServer((req, res) => {
 
   const url = new URL(req.url ?? "", `http://${req.headers.host}`)
 
+  //GET: collect all webScraperdata
+  if (url.pathname === "/api/webscrapers" && req.method === "GET") {
+    const database = await getDatabase()
+
+    res.end(JSON.stringify(
+      database.webScrapers
+    ))
+    return
+  }
+
+  //POST: save a new webScraper
   if (url.pathname === "/api/webscrapers" && req.method === "POST") {
 
     let body = ""
 
-    req.on("data", chunk => {
+    for await (const chunk of req) {
       body += chunk
+    }
+
+    const newWebScraper = JSON.parse(body)
+
+    const database = await getDatabase()
+
+    database.webScrapers.push({
+      id: Date.now(),
+      ...newWebScraper
     })
 
-    req.on("end", async () => {
+    await saveDatabase(database)
 
-      const newWebScraper = JSON.parse(body)
-
-      const database = await getDatabase()
-
-      database.webScrapers.push({
-        id: Date.now(),
-        ...newWebScraper
-      })
-
-      await saveDatabase(database)
-
-      res.end(JSON.stringify({
-        message: "Web scraper added"
-      }))
-    })
-  
+    res.end(JSON.stringify({
+      message: "Web scraper added"
+    }))
     return
   }
 

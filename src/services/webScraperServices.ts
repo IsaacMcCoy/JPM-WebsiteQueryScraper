@@ -1,18 +1,24 @@
-//Save the newWebScrapers to the database
+//UI and Server interaction for webScrapers
 
-import { ref } from 'vue'
 import type { WebScraper } from "../types/webScraper.ts"
 
-export const webScraperList = ref<WebScraper[]>([])
+export async function getAllWebScrapers() {
+  const response = await fetch("/api/webscrapers", {
+    method: "GET"
+  })
 
+  return response.json()
+}
+
+//Save the newWebScrapers to the database
 export async function saveWebScraper(webScraper: WebScraper) {
-  const responce = await fetch("api/webscrapers", {
+  const response = await fetch("api/webscrapers", {
     method: "POST",
     headers: {
-      "Content-Type": "appliction/json"
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(webScraper)
   })
   
-  return responce.json()
+  return response.json()
 }
