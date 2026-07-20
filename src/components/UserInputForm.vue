@@ -77,7 +77,7 @@ function submitParameters() {
       </button>
 
     </form>
-    <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center">
+    <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">
       <a class="hover:underline cursor-pointer">Previous Searches</a>
     </div>
   </div>
