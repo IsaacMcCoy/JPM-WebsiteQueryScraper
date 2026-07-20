@@ -73,7 +73,7 @@ async function searchWebsiteHTML(websiteId: number, keyword: string, precision: 
 export function useWebScraper() {
   const newWebScraper = ref<WebScraper>({
     url: '',
-    credibility: null,
+    credibility: 0,
     updateFrequency: '',
     keyword: ''
   })
