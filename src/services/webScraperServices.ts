@@ -2,7 +2,8 @@
 
 import type { WebScraper } from "../types/webScraper.ts"
 
-export async function getAllWebScrapers() {
+//Load all webScrapers from the database
+export async function loadAllWebScrapers(): Promise<WebScraper[]> {
   const response = await fetch("/api/webscrapers", {
     method: "GET"
   })
@@ -10,8 +11,8 @@ export async function getAllWebScrapers() {
   return response.json()
 }
 
-//Save the newWebScrapers to the database
-export async function saveWebScraper(webScraper: WebScraper) {
+//Save newWebScrapers to the database
+export async function saveNewWebScraper(webScraper: WebScraper) {
   const response = await fetch("/api/webscrapers", {
     method: "POST",
     headers: {
@@ -21,4 +22,19 @@ export async function saveWebScraper(webScraper: WebScraper) {
   })
   
   return response.json()
+}
+
+//Load website HTML via the URL
+export async function loadWebsiteFullContent(url: string): Promise<string> {
+  const response = await fetch(
+    `/api/extraction?url=${encodeURIComponent(url)}`,
+    {
+      method: "GET"
+    }
+  )
+  if(!response.ok) {
+    throw new Error(`extrcation request failed: ${response.status}`)
+  }
+
+  return await response.text()
 }
