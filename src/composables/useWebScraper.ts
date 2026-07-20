@@ -30,17 +30,3 @@ export function useWebScraper() {
     ready
   }
 }
-
-// Schema for loading a URL
-//
-// async function loadSchema() {
-//   await ready
-//   console.log("go running")
-//   if (webScraperList.value.length === 0) {
-//     console.log("no scrapers in database yet") //this is a very worthwhile check
-//     return
-//   }
-//   const testing = await getWebsiteContent(webScraperList.value[0].url)
-//   console.log(testing)
-// }
-// go()
