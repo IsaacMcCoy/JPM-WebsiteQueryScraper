@@ -11,7 +11,7 @@ const completeForm = computed(() =>
   newWebScraper.value.url !== '' &&
   typeof newWebScraper.value.credibility === 'number' &&
   newWebScraper.value.credibility <= 100 &&
-  newWebScraper.value.credibility >= 1 &&
+  newWebScraper.value.credibility >= 0 &&
   newWebScraper.value.updateFrequency !== '' &&
   newWebScraper.value.keyword !== ''
 )
@@ -37,7 +37,7 @@ function submitParameters() {
         <label class="text-[18px] text-black">Website Credibility</label>
         <input
           type="number"
-          min="1"
+          min="0"
           max="100"
           v-model="newWebScraper.credibility"
           class="rounded-md placeholder:text-gray-400"
@@ -77,9 +77,7 @@ function submitParameters() {
       </button>
 
     </form>
-    <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">
-      <a class="hover:underline cursor-pointer">Previous Searches</a>
-    </div>
+    <slot />
   </div>
 </template>
 

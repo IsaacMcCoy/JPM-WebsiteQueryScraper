@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import PageView from './views/PageView.vue'
+import TableView from './views/TableView.vue'
+import { currentView } from './composables/useViews.ts'
+import EditScraperView from './views/EditScraperView.vue';
+
 </script>
 
 <template>
-  <PageView />
+  <TableView v-if="currentView==='table'" />
+  <EditScraperView v-if="currentView==='edit'" />
 </template>
