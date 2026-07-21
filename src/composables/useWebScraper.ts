@@ -83,6 +83,7 @@ export function useWebScraper() {
   }
 
   return {
+    ready,
     webScraperList,
     newWebScraper,
     searchWebsiteHTML,

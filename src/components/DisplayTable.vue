@@ -2,20 +2,32 @@
 import { ref, onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper'
 
-const { webScraperList, searchWebsiteHTML } = useWebScraper()
+const { ready, webScraperList, searchWebsiteHTML } = useWebScraper()
 
-const data = ref<string[]>([])
+interface SearchResult {
+  websiteIndex: number
+  reference: string
+}
 
-const search = 0
+const data = ref<SearchResult[]>([])
 
 onMounted(async () => {
-  data.value = await searchWebsiteHTML(search, "cain", 20)
+  await ready
+  for(let i = 0; i < webScraperList.value.length; i++) {
+    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword, 20))
+    for (const reference of results) {
+      data.value.push({
+        websiteIndex: i,
+        reference
+      })
+    }
+  }
 })
 
 </script>
 
 <template>
-  <div class="grid grid-cols-[auto_auto_auto_auto_auto] place-items-center"> <!--Order is index, site, cred, update, usage-->
+  <div class="grid grid-cols-[auto_auto_auto_auto_auto] place-items-center m-10"> <!--Order is index, site, cred, update, usage-->
     
     <div class="w-full h-full bg-white border border-black p-2 text-center">Index</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Site</div>
@@ -23,27 +35,38 @@ onMounted(async () => {
     <div class="w-full h-full bg-white border border-black p-2 text-center">Update Frequency</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Usage</div>
     
-    <div class="contents" v-for="(reference, index) in data" :key="index">
+    <div class="contents" v-for="(result, index) in data" :key="index">
+      
       <div
         class="w-full h-full bg-white border border-black p-2 text-center"
-      >{{ index + 1 }}</div>
+      >
+        {{ index + 1 }}
+      </div>
+      
       <a
-        :href="webScraperList[search].url" target="_blank"
+        :href="webScraperList[result.websiteIndex].url" target="_blank"
         class="w-full h-full bg-white border border-black p-2 text-center underline hover:text-blue-400 hover:cursor-pointer"
       >
-        {{ webScraperList[search].url }}
+        {{ webScraperList[result.websiteIndex].url }}
       </a>
+
       <div
         class="w-full h-full bg-white border border-black p-2 text-center"
         :class="
-          webScraperList[search].credibility >= 90
+          webScraperList[result.websiteIndex].credibility >= 90
             ? 'text-green-600'
-            : webScraperList[search].credibility >= 75
+            : webScraperList[result.websiteIndex].credibility >= 75
             ? 'text-yellow-600'
             : 'text-red-600'
-        ">{{ webScraperList[search].credibility }}%</div>
-      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ webScraperList[search].updateFrequency }}</div>
-      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ reference }}</div>
+        "
+      >
+        {{ webScraperList[result.websiteIndex].credibility }}%
+      </div>
+      
+      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ webScraperList[result.websiteIndex].updateFrequency }}</div>
+      
+      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ result.reference }}</div>
+    
     </div>
   
   </div>
