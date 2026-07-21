@@ -14,7 +14,7 @@ const data = ref<SearchResult[]>([])
 onMounted(async () => {
   await ready
   for(let i = 0; i < webScraperList.value.length; i++) {
-    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword, 20))
+    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
     for (const reference of results) {
       data.value.push({
         websiteIndex: i,
@@ -24,6 +24,22 @@ onMounted(async () => {
   }
 })
 
+function splitByKeyword(text: string, keyword: string) {
+  if (!keyword) return [{ text, match: false }]
+  const parts = []
+  const lower = text.toLowerCase()
+  const kwLower = keyword.toLowerCase()
+  let i = 0
+  let idx = lower.indexOf(kwLower)
+  while (idx !== -1) {
+    if (idx > i) parts.push({ text: text.slice(i, idx), match: false })
+    parts.push({ text: text.slice(idx, idx + keyword.length), match: true })
+    i = idx + keyword.length
+    idx = lower.indexOf(kwLower, i)
+  }
+  if (i < text.length) parts.push({ text: text.slice(i), match: false })
+  return parts
+}
 </script>
 
 <template>
@@ -65,7 +81,13 @@ onMounted(async () => {
       
       <div class="w-full h-full bg-white border border-black p-2 text-center">{{ webScraperList[result.websiteIndex].updateFrequency }}</div>
       
-      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ result.reference }}</div>
+      <div class="w-full h-full bg-white border border-black p-2 text-center">
+  <span
+    v-for="(part, i) in splitByKeyword(result.reference, webScraperList[result.websiteIndex].keyword)"
+    :key="i"
+    :class="part.match ? 'text-green-600 font-semibold' : ''"
+  >{{ part.text }}</span>
+</div>
     
     </div>
   
