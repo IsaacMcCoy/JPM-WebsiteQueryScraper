@@ -51,3 +51,19 @@ export async function deleteWebScraper(id: number) {
 
   return response.json()
 }
+
+//Save WebScrapers edits to the database
+export async function saveWebScraperChanges(id: number, updates: Partial<WebScraper>) {
+  const response = await fetch(`/api/webscrapers?id=${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(updates)
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to update scraper: ${response.status}`)
+  }
+
+  return response.json()
+}

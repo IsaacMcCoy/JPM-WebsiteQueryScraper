@@ -79,8 +79,7 @@ const server = createServer(async (req, res) => {
     }
 
     const database = await getDatabase()
-    console.log(database.webScrapers)
-    console.log("Deleting id:", id, typeof id)
+    console.log("Deleting id:", id)
 
     const originalLength = database.webScrapers.length
     const updatedScrapers = database.webScrapers.filter(
@@ -122,6 +121,76 @@ const server = createServer(async (req, res) => {
     return
   }
 
+  //PATCH: replace portions of a webscraper
+  if (url.pathname === "/api/webscrapers" && req.method === "PATCH") {
+
+    const target = url.searchParams.get("id")
+
+    if(!target) {
+      console.log("PATCH webScrapers: target undefined or null")
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Missing parameter: target"
+      }))
+      return
+    }
+
+    const id = Number(target)
+
+    if(Number.isNaN(id)) {
+      console.log("PATCH webScrapers: target is not a number")
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Invalid parameter: target"
+      }))
+      return
+    }
+
+    let body = ""
+
+    for await (const chunk of req) {
+      body += chunk
+    }
+
+    const database = await getDatabase()
+
+    const scraper = database.webScrapers.find(s => s.id === id)
+
+    if (!scraper) {
+      res.writeHead(404)
+      res.end(JSON.stringify({
+        message: "Scraper not found"
+      }))
+      return
+    }
+
+    try {
+      const updates = JSON.parse(body)
+
+      delete updates.id
+
+      Object.assign(scraper, updates);
+    
+      await saveDatabase(database)
+
+      res.setHeader("Content-Type", "application/json")
+    
+      res.end(JSON.stringify({
+        message: "Web scraper edits saved"
+      }))
+
+    } catch {
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Invalid JSON"
+      }))
+      return
+    }
+
+    console.log("PATCH webscrapers successful")
+    return
+  }
+
   //POST: save a new webScraper
   if (url.pathname === "/api/webscrapers" && req.method === "POST") {
 
@@ -150,7 +219,9 @@ const server = createServer(async (req, res) => {
       }))
     } catch {
       res.writeHead(400)
-      res.end("Invalid JSON")
+      res.end(JSON.stringify({
+        message: "Invalid JSON"
+      }))
       return
     }
 
@@ -161,7 +232,7 @@ const server = createServer(async (req, res) => {
   //anything that did not match route
   res.statusCode = 404
   res.end(JSON.stringify({
-    message: "Not Found"
+    message: "Service Not Found"
   }))
   
   console.log("API failed 404")
