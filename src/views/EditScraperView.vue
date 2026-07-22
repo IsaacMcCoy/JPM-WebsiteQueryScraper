@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import UserInputForm from '../components/AddNewForm.vue'
+import AddNewForm from '../components/AddNewForm.vue'
+import EditForm from '../components/EditForm.vue'
 import DeleteForm from '../components/DeleteForm.vue'
 import { currentView } from '../composables/useViews'
 import { ref } from 'vue'
@@ -16,7 +17,7 @@ const editChoice = ref<EditOptions>(null)
     <div v-if="editChoice===null" class="min-w-[300px] rounded-lg border border-gray-200">
       <div class="p-4  flex flex-col gap-3 bg-white rounded-t-lg">
         <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='add'">Add Web Scraper</button>
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2">Edit Web Scraper</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='edit'">Edit Web Scraper</button>
         <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='delete'">Delete Web Scraper</button>
       </div>
 
@@ -29,7 +30,8 @@ const editChoice = ref<EditOptions>(null)
     <!--Actual forms-->
     <div v-else class="min-w-[375px] min-h-[100px] rounded-lg border border-gray-200 p-0">
       
-      <UserInputForm v-if="editChoice==='add'" />
+      <AddNewForm v-if="editChoice==='add'" />
+      <EditForm v-if="editChoice==='edit'" />
       <DeleteForm v-if="editChoice==='delete'" />
 
       <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">

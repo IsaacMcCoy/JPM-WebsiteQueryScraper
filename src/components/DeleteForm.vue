@@ -32,7 +32,8 @@ onMounted(async () => {
 <template>
   <form @submit.prevent="submitParameters()" class="rounded-t-md flex flex-col bg-white p-2">
     
-    <div class="grid grid-cols-[auto_auto] place-items-center m-2 mt-5 border border-gray-300">
+    <h1>Choose a Scraper to delete</h1>
+    <div class="grid grid-cols-[auto_auto] place-items-center m-2 mt-2 border border-gray-300">
       
       <div class="border-b border-r border-gray-300 w-full px-2 pt-2">Website</div>
       <div class="border-b border-l border-gray-300 w-full px-2 pt-2">Keyword</div>

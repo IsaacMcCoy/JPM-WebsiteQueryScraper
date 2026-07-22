@@ -2,7 +2,7 @@
 
 import { ref } from 'vue'
 import type { WebScraper } from '../types/webScraper.ts'
-import { loadAllWebScrapers, saveNewWebScraper, loadWebsiteFullContent, deleteWebScraper } from '../services/webScraperServices'
+import { loadAllWebScrapers, saveNewWebScraper, loadWebsiteFullContent, deleteWebScraper, saveWebScraperChanges } from '../services/webScraperServices'
 
 const webScraperList = ref<WebScraper[]>([])
 
@@ -100,8 +100,20 @@ export function useWebScraper() {
     await saveNewWebScraper(addedWebScraper) //save added WebScraper to database
   }
 
+  async function editWebScraper(changedWebScraper: WebScraper, updates: Partial<WebScraper>) {
+    if (typeof changedWebScraper.id === "number") {
+      await saveWebScraperChanges(changedWebScraper.id, updates)
+    } else {
+      alert("error in editing webscraper")
+    }
+  }
+
   async function removeWebScraper(removedWebScraper: WebScraper) {
-    await deleteWebScraper(removedWebScraper.id)
+    if (typeof removedWebScraper.id === "number") {
+      await deleteWebScraper(removedWebScraper.id)
+    } else {
+      alert("error in removing scraper")
+    }
   }
 
   return {
@@ -110,6 +122,7 @@ export function useWebScraper() {
     newWebScraper,
     searchWebsiteHTML,
     addNewWebScraper,
+    editWebScraper,
     removeWebScraper,
     loadWebsiteHTML
   }
