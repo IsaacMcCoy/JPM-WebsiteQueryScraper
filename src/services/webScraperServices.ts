@@ -38,3 +38,16 @@ export async function loadWebsiteFullContent(url: string): Promise<string> {
 
   return await response.text()
 }
+
+//Delete web scraper
+export async function deleteWebScraper(id: number) {
+  const response = await fetch(`/api/webscrapers?id=${id}`, {
+    method: "DELETE"
+  })
+
+  if(!response.ok) {
+    throw new Error(`Failed to delete scraper: ${response.status}`)
+  }
+
+  return response.json()
+}

@@ -2,6 +2,7 @@ import { createServer } from 'node:http'
 import { getDatabase, saveDatabase } from './utils/apiGetDatabase.ts'
 
 const server = createServer(async (req, res) => {
+  res.setHeader("Content-Type", "application/json")
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
@@ -45,10 +46,65 @@ const server = createServer(async (req, res) => {
       console.log("GET extraction successful")
 
     } catch (err) {
-      console.log("Get extraction: error triggered")
-      res.writeHead(500)
+      console.log("GET extraction: failed to load HTML")
+      res.writeHead(404)
       res.end(String(err))
     }
+    return
+  }
+
+  //Delete full webScraper from Database
+  if(url.pathname === "/api/webscrapers" && req.method === "DELETE") {
+    
+    const target = url.searchParams.get("id")
+
+    if(!target) {
+      console.log("DELETE webScrapers: target undefined or null")
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Missing parameter: target"
+      }))
+      return
+    }
+
+    const id = Number(target)
+
+    if(Number.isNaN(id)) {
+      console.log("DELETE webScrapers: target is not a number")
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Invalid parameter: target"
+      }))
+      return
+    }
+
+    const database = await getDatabase()
+    console.log(database.webScrapers)
+    console.log("Deleting id:", id, typeof id)
+
+    const originalLength = database.webScrapers.length
+    const updatedScrapers = database.webScrapers.filter(
+      scraper => scraper.id !== id
+    )
+
+    if (updatedScrapers.length === originalLength) {
+      console.log(`DELETE webScrapers: no scraper found with id: ${id}`)
+      res.writeHead(404)
+      res.end(JSON.stringify({
+        message: "Scraper not found"
+      }))
+      return
+    }
+
+    database.webScrapers = updatedScrapers
+    await saveDatabase(database)
+
+    res.setHeader("Content-Type", "application/json")
+    res.end(JSON.stringify({
+      message: "WebScraper deleted"
+    }))
+
+    console.log("DELETE webScrapers successful")
     return
   }
 
@@ -75,22 +131,28 @@ const server = createServer(async (req, res) => {
       body += chunk
     }
 
-    const newWebScraper = JSON.parse(body)
+    try {
+      const newWebScraper = JSON.parse(body)
 
-    const database = await getDatabase()
+      const database = await getDatabase()
 
-    database.webScrapers.push({
-      id: Date.now(),
-      ...newWebScraper
-    })
+      database.webScrapers.push({
+        id: Date.now(),
+        ...newWebScraper
+      })
 
-    await saveDatabase(database)
+      await saveDatabase(database)
 
-    res.setHeader("Content-Type", "application/json")
+      res.setHeader("Content-Type", "application/json")
     
-    res.end(JSON.stringify({
-      message: "Web scraper added"
-    }))
+      res.end(JSON.stringify({
+        message: "Web scraper added"
+      }))
+    } catch {
+      res.writeHead(400)
+      res.end("Invalid JSON")
+      return
+    }
 
     console.log("POST webscrapers successful")
     return
