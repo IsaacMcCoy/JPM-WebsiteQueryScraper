@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper'
 import type { WebScraper } from '../types/webScraper'
-import { deleteWebScraper } from '../services/webScraperServices'
 
-const { webScraperList, ready } = useWebScraper()
+
+const { webScraperList, ready, removeWebScraper } = useWebScraper()
 
 const scraperList = ref<WebScraper[]>([])
 
@@ -16,7 +16,7 @@ async function submitParameters() {
       `Delete scraper tracking "${selected.value.keyword}" on ${selected.value.url}?`
     )
     if (!confirmed) { return }
-    await deleteWebScraper(selected.value.id)
+    await removeWebScraper(selected.value)
     selected.value = null
   }
 }
