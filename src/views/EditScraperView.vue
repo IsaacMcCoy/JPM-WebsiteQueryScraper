@@ -16,8 +16,8 @@ const editChoice = ref<EditOptions>(null)
     <div v-if="editChoice===null" class="min-w-[300px] rounded-lg border border-gray-200">
       <div class="p-4  flex flex-col gap-3 bg-white rounded-t-lg">
         <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='add'">Add Web Scraper</button>
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2">Edit Web Scrapers</button>
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='delete'">Delete Web Scrapers</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2">Edit Web Scraper</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='delete'">Delete Web Scraper</button>
       </div>
 
       <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">

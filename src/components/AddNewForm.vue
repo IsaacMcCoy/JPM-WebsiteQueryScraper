@@ -73,7 +73,7 @@ function submitParameters() {
           : 'bg-red-200 text-red-500 border-red-300'
       ]"
     >
-      Run Query
+      Add Web Scraper
     </button>
 
   </form>
