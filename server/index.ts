@@ -121,6 +121,20 @@ const server = createServer(async (req, res) => {
     return
   }
 
+  //GET: collect all ignoreRows
+  if (url.pathname === "/api/ignorerows" && req.method === "GET") {
+    const database = await getDatabase()
+    
+    res.setHeader("Content-Type", "application/json")
+    
+    res.end(JSON.stringify(
+      database.ignoreRows
+    ))
+
+    console.log("GET ignoreRows successful")
+    return
+  }
+
   //PATCH: replace portions of a webscraper
   if (url.pathname === "/api/webscrapers" && req.method === "PATCH") {
 

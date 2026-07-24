@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import { useWebScraper } from './useWebScraper'
-const { ready, webScraperList, searchWebsiteHTML } = useWebScraper()
+import { useIgnoreRow } from './useIgnoreRow'
+
+const { webScraperReady, webScraperList, searchWebsiteHTML } = useWebScraper()
+const { isIgnoreRow, ignoreRowReady } = useIgnoreRow()
 
 const selected = ref<number[]>([])
 
@@ -27,11 +30,13 @@ const data = ref<SearchResult[]>([])
 async function configureDisplayRows() {
   data.value = []
   let x = 0
-  await ready
+  await webScraperReady
+  await ignoreRowReady
   for(let i = 0; i < webScraperList.value.length; i++) {
     const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
     for (const reference of results) {
       x += 1
+      if(!isIgnoreRow(webScraperList.value[i].url, reference))
       data.value.push({
         websiteIndex: i,
         reference,

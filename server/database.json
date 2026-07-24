@@ -21,5 +21,15 @@
       "updateFrequency": "yearly",
       "keyword": "ergon"
     }
+  ],
+  "ignoreRows": [
+    {
+      "url": "https://www.shinetsusilicones.com/",
+      "reference": "Silicone Oligomers"
+    },
+    {
+      "url": "https://ergon.com/",
+      "reference": "ergonspecialtyoils.com"
+    }
   ]
 }

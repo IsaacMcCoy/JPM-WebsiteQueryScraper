@@ -2,9 +2,11 @@
 
 import { readFile, writeFile } from "node:fs/promises"
 import type { WebScraper } from '../../src/types/webScraper.ts'
+import type { IgnoreRow } from "../../src/types/ignoreRow.ts"
 
 interface Database {
-  webScrapers: WebScraper[];
+  webScrapers: WebScraper[]
+  ignoreRows: IgnoreRow[]
 }
 
 const databasePath = "./server/database.json"
