@@ -131,7 +131,6 @@ onMounted(async () => {
     <input
       v-model="webScraperChanges.keyword"
       class="rounded-md"
-      :placeholder="selected?.keyword"
     />
 
     <button 
