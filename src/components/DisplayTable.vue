@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper'
+import { useTableRow } from '../composables/useTableRow'
 
 const { ready, webScraperList, searchWebsiteHTML } = useWebScraper()
+const { isSelected, toggleSelected } = useTableRow()
 
 interface SearchResult {
   websiteIndex: number
@@ -43,7 +45,8 @@ function colorKeyword(text: string, keyword: string) {
 </script>
 
 <template>
-  <div class="grid grid-cols-[auto_auto_auto_auto_auto] place-items-center m-10"> <!--Order is index, site, cred, update, usage-->
+  <div class="p-1 bg-white rounded-md m-10"> <!--temporary DIV just for seperating blue highlight from blue background-->
+  <div class="grid grid-cols-[auto_auto_auto_auto_auto] place-items-center"> <!--Order is index, site, cred, update, usage-->
     
     <div class="w-full h-full bg-white border border-black p-2 text-center">Index</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Site</div>
@@ -54,42 +57,73 @@ function colorKeyword(text: string, keyword: string) {
     <div class="contents" v-for="(result, index) in data" :key="index">
       
       <div
-        class="w-full h-full bg-white border border-black p-2 text-center"
+        class="w-full h-full border border-black p-2 text-center"
+        :class="isSelected(index)
+          ? 'bg-blue-100'
+          : 'bg-white'"
+          @click="toggleSelected(index)"
       >
         {{ index + 1 }}
       </div>
       
       <a
         :href="webScraperList[result.websiteIndex].url" target="_blank"
-        class="w-full h-full bg-white border border-black p-2 text-center underline hover:text-blue-400 hover:cursor-pointer"
+        class="w-full h-full border border-black p-2 text-center underline hover:text-blue-400 hover:cursor-pointer"
+        :class="isSelected(index)
+          ? 'bg-blue-100'
+          : 'bg-white'"
+        @click="toggleSelected(index)"
       >
         {{ webScraperList[result.websiteIndex].url }}
       </a>
 
       <div
-        class="w-full h-full bg-white border border-black p-2 text-center"
-        :class="
+        class="w-full h-full border border-black p-2 text-center"
+        :class="[
           webScraperList[result.websiteIndex].credibility >= 90
             ? 'text-green-600'
             : webScraperList[result.websiteIndex].credibility >= 75
-            ? 'text-yellow-600'
-            : 'text-red-600'
-        "
+              ? 'text-yellow-600'
+              : 'text-red-600',
+          isSelected(index)
+            ? 'bg-blue-100'
+            : 'bg-white'
+        ]"
+        @click="toggleSelected(index)"
       >
         {{ webScraperList[result.websiteIndex].credibility }}%
       </div>
       
-      <div class="w-full h-full bg-white border border-black p-2 text-center">{{ webScraperList[result.websiteIndex].updateFrequency }}</div>
+      <div
+        class="w-full h-full border border-black p-2 text-center"
+        :class="isSelected(index)
+          ? 'bg-blue-100'
+          : 'bg-white'"
+        @click="toggleSelected(index)"
+        >
+          {{ webScraperList[result.websiteIndex].updateFrequency }}</div>
       
-      <div class="w-full h-full bg-white border border-black p-2 text-center">
-  <span
-    v-for="(part, i) in colorKeyword(result.reference, webScraperList[result.websiteIndex].keyword)"
-    :key="i"
-    :class="part.match ? 'text-green-600 font-semibold' : ''"
-  >{{ part.text }}</span>
-</div>
+      <div
+        class="w-full h-full border border-black p-2 text-center"
+        :class="isSelected(index)
+          ? 'bg-blue-100'
+          : 'bg-white'"
+        @click="toggleSelected(index)"
+        >
+        <span
+          v-for="(part, i) in colorKeyword(result.reference, webScraperList[result.websiteIndex].keyword)"
+          :key="i"
+          :class="part.match
+            ? 'text-green-600 font-semibold'
+            : ''
+          "
+        >
+          {{ part.text }}
+        </span>
+      </div>
     
     </div>
   
+  </div>
   </div>
 </template>
