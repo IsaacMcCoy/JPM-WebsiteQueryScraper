@@ -1,4 +1,6 @@
 import { ref } from 'vue'
+import { useWebScraper } from './useWebScraper'
+const { ready, webScraperList, searchWebsiteHTML } = useWebScraper()
 
 const selected = ref<number[]>([])
 
@@ -14,10 +16,47 @@ function toggleSelected(index: number) {
   }
 }
 
+interface SearchResult {
+  websiteIndex: number
+  reference: string
+  refIndex: number
+}
+
+const data = ref<SearchResult[]>([])
+
+async function configureDisplayRows() {
+  data.value = []
+  let x = 0
+  await ready
+  for(let i = 0; i < webScraperList.value.length; i++) {
+    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
+    for (const reference of results) {
+      x += 1
+      data.value.push({
+        websiteIndex: i,
+        reference,
+        refIndex: x
+      })
+    }
+  }
+}
+
+async function removeRows(rows: number[]) {
+  for(let i = 0; i < rows.length; i++) {
+    data.value = data.value.filter(
+      item => !rows.includes(item.refIndex)
+    )
+  }
+  selected.value = []
+}
+
 export function useTableRow() {
   return {
+    data,
+    configureDisplayRows,
     selected,
     isSelected,
-    toggleSelected
+    toggleSelected,
+    removeRows
   }
 }

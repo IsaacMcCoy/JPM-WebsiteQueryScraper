@@ -1,30 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper'
 import { useTableRow } from '../composables/useTableRow'
 
-const { ready, webScraperList, searchWebsiteHTML } = useWebScraper()
-const { isSelected, toggleSelected } = useTableRow()
-
-interface SearchResult {
-  websiteIndex: number
-  reference: string
-}
-
-const data = ref<SearchResult[]>([])
-
-onMounted(async () => {
-  await ready
-  for(let i = 0; i < webScraperList.value.length; i++) {
-    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
-    for (const reference of results) {
-      data.value.push({
-        websiteIndex: i,
-        reference
-      })
-    }
-  }
-})
+const { webScraperList } = useWebScraper()
+const { data, isSelected, toggleSelected, configureDisplayRows } = useTableRow()
 
 function colorKeyword(text: string, keyword: string) {
   if (!keyword) return [{ text, match: false }]
@@ -42,6 +22,8 @@ function colorKeyword(text: string, keyword: string) {
   if (i < text.length) parts.push({ text: text.slice(i), match: false })
   return parts
 }
+
+onMounted(configureDisplayRows)
 </script>
 
 <template>
@@ -54,28 +36,33 @@ function colorKeyword(text: string, keyword: string) {
     <div class="w-full h-full bg-white border border-black p-2 text-center">Update Frequency</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Usage</div>
     
-    <div class="contents" v-for="(result, index) in data" :key="index">
+    <div class="contents" v-for="result in data" :key="result.refIndex">
       
       <div
         class="w-full h-full border border-black p-2 text-center"
-        :class="isSelected(index)
-          ? 'bg-blue-100'
+        :class="isSelected(result.refIndex)
+          ? 'bg-blue-200'
           : 'bg-white'"
-          @click="toggleSelected(index)"
+          @click="toggleSelected(result.refIndex)"
       >
-        {{ index + 1 }}
+        {{ result.refIndex }}
       </div>
       
-      <a
-        :href="webScraperList[result.websiteIndex].url" target="_blank"
-        class="w-full h-full border border-black p-2 text-center underline hover:text-blue-400 hover:cursor-pointer"
-        :class="isSelected(index)
-          ? 'bg-blue-100'
-          : 'bg-white'"
-        @click="toggleSelected(index)"
-      >
-        {{ webScraperList[result.websiteIndex].url }}
-      </a>
+      <div
+        class="w-full h-full border border-black p-2 text-center"
+          :class="isSelected(result.refIndex)
+            ? 'bg-blue-200'
+            : 'bg-white'"
+          @click="toggleSelected(result.refIndex)"
+        >
+        <a
+          :href="webScraperList[result.websiteIndex].url" target="_blank"
+          class="underline hover:text-blue-400 hover:cursor-pointer"
+          @click.stop
+        >
+          {{ webScraperList[result.websiteIndex].url }}
+        </a>
+      </div>
 
       <div
         class="w-full h-full border border-black p-2 text-center"
@@ -85,30 +72,30 @@ function colorKeyword(text: string, keyword: string) {
             : webScraperList[result.websiteIndex].credibility >= 75
               ? 'text-yellow-600'
               : 'text-red-600',
-          isSelected(index)
-            ? 'bg-blue-100'
+          isSelected(result.refIndex)
+            ? 'bg-blue-200'
             : 'bg-white'
         ]"
-        @click="toggleSelected(index)"
+        @click="toggleSelected(result.refIndex)"
       >
         {{ webScraperList[result.websiteIndex].credibility }}%
       </div>
       
       <div
         class="w-full h-full border border-black p-2 text-center"
-        :class="isSelected(index)
-          ? 'bg-blue-100'
+        :class="isSelected(result.refIndex)
+          ? 'bg-blue-200'
           : 'bg-white'"
-        @click="toggleSelected(index)"
+        @click="toggleSelected(result.refIndex)"
         >
           {{ webScraperList[result.websiteIndex].updateFrequency }}</div>
       
       <div
         class="w-full h-full border border-black p-2 text-center"
-        :class="isSelected(index)
-          ? 'bg-blue-100'
+        :class="isSelected(result.refIndex)
+          ? 'bg-blue-200'
           : 'bg-white'"
-        @click="toggleSelected(index)"
+        @click="toggleSelected(result.refIndex)"
         >
         <span
           v-for="(part, i) in colorKeyword(result.reference, webScraperList[result.websiteIndex].keyword)"
