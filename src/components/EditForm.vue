@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper.ts'
 import type { WebScraper } from '../types/webScraper.ts'
 
-const { ready, webScraperList, editWebScraper } = useWebScraper()
+const { webScraperReady, webScraperList, editWebScraper } = useWebScraper()
 
 const webScraperChanges = ref<WebScraper>({
   url: '',
@@ -39,7 +39,7 @@ function submitParameters() {
 const scraperList = ref<WebScraper[]>([])
 
 onMounted(async () => {
-  await ready
+  await webScraperReady
   scraperList.value = webScraperList.value
   }
 )

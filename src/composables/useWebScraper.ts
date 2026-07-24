@@ -7,13 +7,13 @@ import { loadAllWebScrapers, saveNewWebScraper, loadWebsiteFullContent, deleteWe
 const webScraperList = ref<WebScraper[]>([])
 
 // expose the loading promise itself
-const ready = loadAllWebScrapers().then(data => {
+const webScraperReady = loadAllWebScrapers().then(data => {
   webScraperList.value = data
 })
 
 //Function for loading a URL
 async function loadWebsiteHTML(scraperId: number): Promise<string> {
-  await ready
+  await webScraperReady
   console.log(`Loading WebScraperList[${scraperId}]`)
   if (webScraperList.value.length === 0) {
     throw new Error('No scrapers in DataBase')
@@ -40,7 +40,7 @@ function extractSnippet(text: string, index: number, keywordLength: number, radi
 // Search a website for a key word. The website must already be in the database with an index number
 async function searchWebsiteHTML(websiteId: number, keyword: string) {
   
-  await ready
+  await webScraperReady
   console.log(`Loading WebScraperList[${websiteId}]...`)
   if (webScraperList.value.length === 0) {
     throw new Error('No scrapers in DataBase')
@@ -117,7 +117,7 @@ export function useWebScraper() {
   }
 
   return {
-    ready,
+    webScraperReady,
     webScraperList,
     newWebScraper,
     searchWebsiteHTML,

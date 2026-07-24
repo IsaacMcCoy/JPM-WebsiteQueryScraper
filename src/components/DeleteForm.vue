@@ -4,7 +4,7 @@ import { useWebScraper } from '../composables/useWebScraper'
 import type { WebScraper } from '../types/webScraper'
 
 
-const { webScraperList, ready, removeWebScraper } = useWebScraper()
+const { webScraperList, webScraperReady, removeWebScraper } = useWebScraper()
 
 const scraperList = ref<WebScraper[]>([])
 
@@ -22,7 +22,7 @@ async function submitParameters() {
 }
 
 onMounted(async () => {
-  await ready
+  await webScraperReady
   scraperList.value = webScraperList.value
   }
 )

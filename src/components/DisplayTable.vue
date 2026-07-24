@@ -23,7 +23,9 @@ function colorKeyword(text: string, keyword: string) {
   return parts
 }
 
-onMounted(configureDisplayRows)
+onMounted(async() => {
+  await configureDisplayRows()
+})
 </script>
 
 <template>
@@ -34,7 +36,7 @@ onMounted(configureDisplayRows)
     <div class="w-full h-full bg-white border border-black p-2 text-center">Site</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Credibility</div>
     <div class="w-full h-full bg-white border border-black p-2 text-center">Update Frequency</div>
-    <div class="w-full h-full bg-white border border-black p-2 text-center">Usage</div>
+    <div class="w-full h-full bg-white border border-black p-2 text-center">Reference</div>
     
     <div class="contents" v-for="result in data" :key="result.refIndex">
       
