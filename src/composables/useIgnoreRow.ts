@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { IgnoreRow } from '../types/ignoreRow.ts'
 import { loadAllIgnoreRows } from '../services/webScraperServices'
+import { saveNewIgnoreRow } from '../services/webScraperServices'
 
 const ignoreRowList = ref<IgnoreRow[]>([])
 
@@ -16,9 +17,20 @@ function isIgnoreRow(url: string, reference: string) {
 }
 
 export function useIgnoreRow() {
+  const newIgnoreRow = ref<IgnoreRow>({
+    url: '',
+    reference: ''
+  })
+    
+  async function addNewIgnoreRow(addedIgnoreRow: IgnoreRow) {
+    await saveNewIgnoreRow(addedIgnoreRow) //save added WebScraper to database
+  }
+
   return {
     ignoreRowReady,
     isIgnoreRow,
-    ignoreRowList
+    ignoreRowList,
+    newIgnoreRow,
+    addNewIgnoreRow
   }
 }

@@ -16,7 +16,7 @@ export async function getDatabase(): Promise<Database> {
   return JSON.parse(file)
 }
 
-export async function saveDatabase(database: any) {
+export async function saveDatabase(database: Database) {
   await writeFile(
     databasePath,
     JSON.stringify(database, null, 2)

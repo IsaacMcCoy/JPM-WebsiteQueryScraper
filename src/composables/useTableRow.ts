@@ -3,7 +3,7 @@ import { useWebScraper } from './useWebScraper'
 import { useIgnoreRow } from './useIgnoreRow'
 
 const { webScraperReady, webScraperList, searchWebsiteHTML } = useWebScraper()
-const { isIgnoreRow, ignoreRowReady } = useIgnoreRow()
+const { isIgnoreRow, ignoreRowReady, newIgnoreRow, addNewIgnoreRow } = useIgnoreRow()
 
 const selected = ref<number[]>([])
 
@@ -36,22 +36,34 @@ async function configureDisplayRows() {
     const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
     for (const reference of results) {
       x += 1
-      if(!isIgnoreRow(webScraperList.value[i].url, reference))
-      data.value.push({
-        websiteIndex: i,
-        reference,
-        refIndex: x
-      })
+      if(!isIgnoreRow(webScraperList.value[i].url, reference)) {
+        data.value.push({
+          websiteIndex: i,
+          reference,
+          refIndex: x
+        })
+      }
     }
   }
 }
 
 async function removeRows(rows: number[]) {
-  for(let i = 0; i < rows.length; i++) {
-    data.value = data.value.filter(
-      item => !rows.includes(item.refIndex)
-    )
+  let removeRows = data.value.filter(
+    item => rows.includes(item.refIndex)
+  )
+  console.log(removeRows)
+  for(let i = 0; i < removeRows.length; i++) {
+    newIgnoreRow.value = {
+      "url": webScraperList.value[removeRows[i].websiteIndex].url,
+      "reference": removeRows[i].reference
+    }
+    console.log("working")
+    addNewIgnoreRow(newIgnoreRow.value)
   }
+  
+  data.value = data.value.filter(
+    item => !rows.includes(item.refIndex)
+  )
   selected.value = []
 }
 

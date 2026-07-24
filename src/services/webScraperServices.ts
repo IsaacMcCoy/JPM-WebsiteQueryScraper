@@ -77,3 +77,16 @@ export async function saveWebScraperChanges(id: number, updates: Partial<WebScra
 
   return response.json()
 }
+
+//Save newIgnoreRow to the database
+export async function saveNewIgnoreRow(ignoreRow: IgnoreRow) {
+  const response = await fetch("/api/ignorerows", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(ignoreRow)
+  })
+  
+  return response.json()
+}
