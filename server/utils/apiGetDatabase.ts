@@ -2,9 +2,11 @@
 
 import { readFile, writeFile } from "node:fs/promises"
 import type { WebScraper } from '../../src/types/webScraper.ts'
+import type { IgnoreRow } from "../../src/types/ignoreRow.ts"
 
 interface Database {
-  webScrapers: WebScraper[];
+  webScrapers: WebScraper[]
+  ignoreRows: IgnoreRow[]
 }
 
 const databasePath = "./server/database.json"
@@ -14,7 +16,7 @@ export async function getDatabase(): Promise<Database> {
   return JSON.parse(file)
 }
 
-export async function saveDatabase(database: any) {
+export async function saveDatabase(database: Database) {
   await writeFile(
     databasePath,
     JSON.stringify(database, null, 2)

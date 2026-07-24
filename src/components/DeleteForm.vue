@@ -4,7 +4,7 @@ import { useWebScraper } from '../composables/useWebScraper'
 import type { WebScraper } from '../types/webScraper'
 
 
-const { webScraperList, ready, removeWebScraper } = useWebScraper()
+const { webScraperList, webScraperReady, removeWebScraper } = useWebScraper()
 
 const scraperList = ref<WebScraper[]>([])
 
@@ -22,7 +22,7 @@ async function submitParameters() {
 }
 
 onMounted(async () => {
-  await ready
+  await webScraperReady
   scraperList.value = webScraperList.value
   }
 )
@@ -32,7 +32,7 @@ onMounted(async () => {
 <template>
   <form @submit.prevent="submitParameters()" class="rounded-t-md flex flex-col bg-white p-2">
     
-    <h1>Choose a Scraper to delete</h1>
+    <h1>Choose a Scraper to Delete</h1>
     <div class="grid grid-cols-[auto_auto] place-items-center m-2 mt-2 border border-gray-300">
       
       <div class="border-b border-r border-gray-300 w-full px-2 pt-2">Website</div>

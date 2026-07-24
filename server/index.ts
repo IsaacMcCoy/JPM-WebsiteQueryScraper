@@ -121,6 +121,20 @@ const server = createServer(async (req, res) => {
     return
   }
 
+  //GET: collect all ignoreRows
+  if (url.pathname === "/api/ignorerows" && req.method === "GET") {
+    const database = await getDatabase()
+    
+    res.setHeader("Content-Type", "application/json")
+    
+    res.end(JSON.stringify(
+      database.ignoreRows
+    ))
+
+    console.log("GET ignoreRows successful")
+    return
+  }
+
   //PATCH: replace portions of a webscraper
   if (url.pathname === "/api/webscrapers" && req.method === "PATCH") {
 
@@ -188,6 +202,44 @@ const server = createServer(async (req, res) => {
     }
 
     console.log("PATCH webscrapers successful")
+    return
+  }
+
+  //POST: save a new ignoreRow
+  if (url.pathname === "/api/ignorerows" && req.method === "POST") {
+
+    let body = ""
+
+    for await (const chunk of req) {
+      body += chunk
+    }
+
+    try {
+      const newIgnoreRow = JSON.parse(body)
+
+      const database = await getDatabase()
+
+      database.ignoreRows.push({
+        id: Date.now(),
+        ...newIgnoreRow
+      })
+
+      await saveDatabase(database)
+
+      res.setHeader("Content-Type", "application/json")
+    
+      res.end(JSON.stringify({
+        message: "Ignore row added"
+      }))
+    } catch {
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Invalid JSON"
+      }))
+      return
+    }
+
+    console.log("POST ignorerRow successful")
     return
   }
 

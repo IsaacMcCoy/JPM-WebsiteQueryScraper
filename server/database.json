@@ -21,5 +21,7 @@
       "updateFrequency": "yearly",
       "keyword": "ergon"
     }
+  ],
+  "ignoreRows": [
   ]
 }

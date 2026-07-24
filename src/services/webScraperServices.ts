@@ -1,10 +1,20 @@
 //UI and Server interaction for webScrapers
 
 import type { WebScraper } from "../types/webScraper.ts"
+import type { IgnoreRow } from "../types/ignoreRow.ts"
 
 //Load all webScrapers from the database
 export async function loadAllWebScrapers(): Promise<WebScraper[]> {
   const response = await fetch("/api/webscrapers", {
+    method: "GET"
+  })
+
+  return response.json()
+}
+
+//Load all ignoreRows from the database
+export async function loadAllIgnoreRows(): Promise<IgnoreRow[]> {
+  const response = await fetch("/api/ignorerows", {
     method: "GET"
   })
 
@@ -65,5 +75,18 @@ export async function saveWebScraperChanges(id: number, updates: Partial<WebScra
     throw new Error(`Failed to update scraper: ${response.status}`)
   }
 
+  return response.json()
+}
+
+//Save newIgnoreRow to the database
+export async function saveNewIgnoreRow(ignoreRow: IgnoreRow) {
+  const response = await fetch("/api/ignorerows", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(ignoreRow)
+  })
+  
   return response.json()
 }
