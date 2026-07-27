@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useWebScraper } from '../composables/useWebScraper'
-import type { WebScraper } from '../types/webScraper'
+import type { WebScraper } from '../types/WebScraper'
 
 
 const { webScraperList, webScraperReady, removeWebScraper } = useWebScraper()

@@ -1,7 +1,7 @@
 //UI and Server interaction for webScrapers
 
-import type { WebScraper } from '../types/webScraper.ts'
-import type { IgnoreRow } from '../types/ignoreRow.ts'
+import type { WebScraper } from '../types/WebScraper.ts'
+import type { IgnoreRow } from '../types/IgnoreRow.ts'
 import { useAlerts } from '../composables/useAlerts.ts'
 
 const { addAlert } = useAlerts()

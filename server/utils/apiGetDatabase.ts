@@ -1,8 +1,8 @@
 //API helper functions which get and save the database
 
 import { readFile, writeFile } from "node:fs/promises"
-import type { WebScraper } from '../../src/types/webScraper.ts'
-import type { IgnoreRow } from "../../src/types/ignoreRow.ts"
+import type { WebScraper } from '../../src/types/WebScraper.ts'
+import type { IgnoreRow } from "../../src/types/IgnoreRow.ts"
 
 interface Database {
   webScrapers: WebScraper[]
