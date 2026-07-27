@@ -46,7 +46,7 @@ export async function loadWebsiteFullContent(url: string): Promise<string> {
     }
   )
   if(!response.ok) {
-    addAlert("error", url)
+    addAlert("error", `"${url}" Not Found`)
     throw new Error(`extrcation request failed: ${response.status}`)
   }
 

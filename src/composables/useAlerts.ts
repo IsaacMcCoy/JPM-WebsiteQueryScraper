@@ -16,7 +16,7 @@ function addAlert(type: AlertType, message: string) {
 
   const timeout = setTimeout(() => {
     removeAlert(id)
-  }, 3000)
+  }, 4000)
 
   alerts.value.push({
     id, type, message, timeout

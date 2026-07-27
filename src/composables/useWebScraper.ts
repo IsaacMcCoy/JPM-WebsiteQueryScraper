@@ -3,6 +3,9 @@
 import { ref } from 'vue'
 import type { WebScraper } from '../types/WebScraper.ts'
 import { loadAllWebScrapers, saveNewWebScraper, loadWebsiteFullContent, deleteWebScraper, saveWebScraperChanges } from '../services/webScraperServices'
+import { useAlerts } from './useAlerts.ts'
+
+const { addAlert } = useAlerts()
 
 const webScraperList = ref<WebScraper[]>([])
 
@@ -82,7 +85,8 @@ async function searchWebsiteHTML(websiteId: number, keyword: string) {
   }
   
   if(results.value.length === 0) {
-    throw new Error ("Keyword not found")
+    console.log("Keyword not found")
+    addAlert("error", `"${keyword}" Not Found @ "${webScraperList.value[websiteId].url}"`)
   }
   return results.value
 }
