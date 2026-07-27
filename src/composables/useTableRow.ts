@@ -33,7 +33,7 @@ async function configureDisplayRows() {
   await webScraperReady
   await ignoreRowReady
   for(let i = 0; i < webScraperList.value.length; i++) {
-    const results = (await searchWebsiteHTML(i, webScraperList.value[i].keyword))
+    const results = await searchWebsiteHTML(i, webScraperList.value[i].keyword)
     for (const reference of results) {
       x += 1
       if(!isIgnoreRow(webScraperList.value[i].url, reference)) {
