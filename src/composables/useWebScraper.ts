@@ -1,7 +1,7 @@
 //display curent web data or create new website tracker
 
 import { ref } from 'vue'
-import type { WebScraper } from '../types/webScraper.ts'
+import type { WebScraper } from '../types/WebScraper.ts'
 import { loadAllWebScrapers, saveNewWebScraper, loadWebsiteFullContent, deleteWebScraper, saveWebScraperChanges } from '../services/webScraperServices'
 
 const webScraperList = ref<WebScraper[]>([])

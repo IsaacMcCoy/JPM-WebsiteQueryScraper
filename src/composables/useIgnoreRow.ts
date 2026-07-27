@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { IgnoreRow } from '../types/ignoreRow.ts'
+import type { IgnoreRow } from '../types/IgnoreRow.ts'
 import { loadAllIgnoreRows } from '../services/webScraperServices'
 import { saveNewIgnoreRow } from '../services/webScraperServices'
 
