@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import type { IgnoreRow } from '../types/IgnoreRow.ts'
-import { loadAllIgnoreRows } from '../services/webScraperServices'
-import { saveNewIgnoreRow } from '../services/webScraperServices'
+import { loadAllIgnoreRows } from '../services/IgnoreRowServices.ts'
+import { saveNewIgnoreRow } from '../services/IgnoreRowServices.ts'
 
 const ignoreRowList = ref<IgnoreRow[]>([])
 

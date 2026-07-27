@@ -1,8 +1,9 @@
 import { ref } from 'vue'
 import { useWebScraper } from './useWebScraper'
 import { useIgnoreRow } from './useIgnoreRow'
+import { searchWebsiteForKeyword } from '../services/webScraperServices'
 
-const { webScraperReady, webScraperList, searchWebsiteHTML } = useWebScraper()
+const { webScraperReady, webScraperList } = useWebScraper()
 const { isIgnoreRow, ignoreRowReady, newIgnoreRow, addNewIgnoreRow } = useIgnoreRow()
 
 const selected = ref<number[]>([])
@@ -21,7 +22,7 @@ function toggleSelected(index: number) {
 
 interface SearchResult {
   websiteIndex: number
-  reference: string
+  referense: string
   refIndex: number
 }
 
@@ -33,13 +34,14 @@ async function configureDisplayRows() {
   await webScraperReady
   await ignoreRowReady
   for(let i = 0; i < webScraperList.value.length; i++) {
-    const results = await searchWebsiteHTML(i, webScraperList.value[i].keyword)
-    for (const reference of results) {
+    if(!webScraperList.value[i].provider) { return }
+    const results = await searchWebsiteForKeyword(webScraperList.value[i].provider, webScraperList.value[i].url, webScraperList.value[i].keyword)
+    for (const referense of results) {
       x += 1
-      if(!isIgnoreRow(webScraperList.value[i].url, reference)) {
+      if(!isIgnoreRow(webScraperList.value[i].url, referense.text)) {
         data.value.push({
           websiteIndex: i,
-          reference,
+          referense: referense.text,
           refIndex: x
         })
       }
@@ -55,7 +57,7 @@ async function removeRows(rows: number[]) {
   for(let i = 0; i < removeRows.length; i++) {
     newIgnoreRow.value = {
       "url": webScraperList.value[removeRows[i].websiteIndex].url,
-      "reference": removeRows[i].reference
+      "reference": removeRows[i].referense
     }
     console.log("working")
     addNewIgnoreRow(newIgnoreRow.value)
