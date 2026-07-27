@@ -4,4 +4,5 @@ export interface WebScraper {
   credibility: number
   updateFrequency: '' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly'
   keyword: string
+  provider?: string
 }

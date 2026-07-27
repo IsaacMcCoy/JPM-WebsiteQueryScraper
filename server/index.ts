@@ -1,8 +1,12 @@
 import { createServer } from 'node:http'
-import { getDatabase, saveDatabase } from './utils/apiGetDatabase.ts'
+
+import { handleWebScrapers } from './routes/handleWebScrapers.ts'
+import { handleIgnoreRows } from './routes/handleIgnoreRows.ts'
+import { handleExtractions } from './routes/handleExtraction.ts'
 
 const server = createServer(async (req, res) => {
-  res.setHeader("Content-Type", "application/json")
+
+  //headers
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
@@ -13,271 +17,20 @@ const server = createServer(async (req, res) => {
     return
   }
 
-  const url = new URL(req.url ?? "", `http://${req.headers.host}`)
+  const url = new URL(
+    req.url ?? "",
+    `http://${req.headers.host}`
+  )
 
-  //GET: extract html from website
-  if(url.pathname === "/api/extraction" && req.method === "GET") {
-    
-    const target = url.searchParams.get("url")
-
-    //verify URL exists
-    if(!target || target === "undefined") {
-      console.log("GET extraction: target undefined or null")
-      res.writeHead(400)
-      res.end("Missing urlParameter")
-      return
-    }
-
-    try {
-      const response = await fetch(target)
-      if(!response.ok) {
-        console.log("GET extraction: !response.ok")
-        res.writeHead(response.status)
-        res.end(`Failed to fetch: ${response.statusText}`)
-        return
-      }
-
-      const htmlContent = await response.text()
-
-      res.setHeader("Content-Type", "text/html")
-      res.statusCode = 200
-      res.end(htmlContent)
-      
-      console.log("GET extraction successful")
-
-    } catch (err) {
-      console.log("GET extraction: failed to load HTML")
-      res.writeHead(404)
-      res.end(String(err))
-    }
+  if(await handleWebScrapers(req, res, url)) {
     return
   }
 
-  //Delete full webScraper from Database
-  if(url.pathname === "/api/webscrapers" && req.method === "DELETE") {
-    
-    const target = url.searchParams.get("id")
-
-    if(!target) {
-      console.log("DELETE webScrapers: target undefined or null")
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Missing parameter: target"
-      }))
-      return
-    }
-
-    const id = Number(target)
-
-    if(Number.isNaN(id)) {
-      console.log("DELETE webScrapers: target is not a number")
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Invalid parameter: target"
-      }))
-      return
-    }
-
-    const database = await getDatabase()
-    console.log("Deleting id:", id)
-
-    const originalLength = database.webScrapers.length
-    const updatedScrapers = database.webScrapers.filter(
-      scraper => scraper.id !== id
-    )
-
-    if (updatedScrapers.length === originalLength) {
-      console.log(`DELETE webScrapers: no scraper found with id: ${id}`)
-      res.writeHead(404)
-      res.end(JSON.stringify({
-        message: "Scraper not found"
-      }))
-      return
-    }
-
-    database.webScrapers = updatedScrapers
-    await saveDatabase(database)
-
-    res.setHeader("Content-Type", "application/json")
-    res.end(JSON.stringify({
-      message: "WebScraper deleted"
-    }))
-
-    console.log("DELETE webScrapers successful")
+  if(await handleIgnoreRows(req, res, url)) {
     return
   }
 
-  //GET: collect all webScraperdata
-  if (url.pathname === "/api/webscrapers" && req.method === "GET") {
-    const database = await getDatabase()
-    
-    res.setHeader("Content-Type", "application/json")
-    
-    res.end(JSON.stringify(
-      database.webScrapers
-    ))
-
-    console.log("GET webscrapers successful")
-    return
-  }
-
-  //GET: collect all ignoreRows
-  if (url.pathname === "/api/ignorerows" && req.method === "GET") {
-    const database = await getDatabase()
-    
-    res.setHeader("Content-Type", "application/json")
-    
-    res.end(JSON.stringify(
-      database.ignoreRows
-    ))
-
-    console.log("GET ignoreRows successful")
-    return
-  }
-
-  //PATCH: replace portions of a webscraper
-  if (url.pathname === "/api/webscrapers" && req.method === "PATCH") {
-
-    const target = url.searchParams.get("id")
-
-    if(!target) {
-      console.log("PATCH webScrapers: target undefined or null")
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Missing parameter: target"
-      }))
-      return
-    }
-
-    const id = Number(target)
-
-    if(Number.isNaN(id)) {
-      console.log("PATCH webScrapers: target is not a number")
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Invalid parameter: target"
-      }))
-      return
-    }
-
-    let body = ""
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    const database = await getDatabase()
-
-    const scraper = database.webScrapers.find(s => s.id === id)
-
-    if (!scraper) {
-      res.writeHead(404)
-      res.end(JSON.stringify({
-        message: "Scraper not found"
-      }))
-      return
-    }
-
-    try {
-      const updates = JSON.parse(body)
-
-      delete updates.id
-
-      Object.assign(scraper, updates);
-    
-      await saveDatabase(database)
-
-      res.setHeader("Content-Type", "application/json")
-    
-      res.end(JSON.stringify({
-        message: "Web scraper edits saved"
-      }))
-
-    } catch {
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Invalid JSON"
-      }))
-      return
-    }
-
-    console.log("PATCH webscrapers successful")
-    return
-  }
-
-  //POST: save a new ignoreRow
-  if (url.pathname === "/api/ignorerows" && req.method === "POST") {
-
-    let body = ""
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    try {
-      const newIgnoreRow = JSON.parse(body)
-
-      const database = await getDatabase()
-
-      database.ignoreRows.push({
-        id: Date.now(),
-        ...newIgnoreRow
-      })
-
-      await saveDatabase(database)
-
-      res.setHeader("Content-Type", "application/json")
-    
-      res.end(JSON.stringify({
-        message: "Ignore row added"
-      }))
-    } catch {
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Invalid JSON"
-      }))
-      return
-    }
-
-    console.log("POST ignorerRow successful")
-    return
-  }
-
-  //POST: save a new webScraper
-  if (url.pathname === "/api/webscrapers" && req.method === "POST") {
-
-    let body = ""
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    try {
-      const newWebScraper = JSON.parse(body)
-
-      const database = await getDatabase()
-
-      database.webScrapers.push({
-        id: Date.now(),
-        ...newWebScraper
-      })
-
-      await saveDatabase(database)
-
-      res.setHeader("Content-Type", "application/json")
-    
-      res.end(JSON.stringify({
-        message: "Web scraper added"
-      }))
-    } catch {
-      res.writeHead(400)
-      res.end(JSON.stringify({
-        message: "Invalid JSON"
-      }))
-      return
-    }
-
-    console.log("POST webscrapers successful")
+  if(await handleExtractions(req, res, url)) {
     return
   }
 
@@ -287,7 +40,7 @@ const server = createServer(async (req, res) => {
     message: "Service Not Found"
   }))
   
-  console.log("API failed 404")
+  console.log(`API Failed 404: ${url} Not Found`)
 })
 
 const PORT = process.env.PORT || 3000
