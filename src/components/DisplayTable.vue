@@ -100,7 +100,7 @@ onMounted(async() => {
         @click="toggleSelected(result.refIndex)"
         >
         <span
-          v-for="(part, i) in colorKeyword(result.reference, webScraperList[result.websiteIndex].keyword)"
+          v-for="(part, i) in colorKeyword(result.referense, webScraperList[result.websiteIndex].keyword)"
           :key="i"
           :class="part.match
             ? 'text-green-600 font-semibold'
