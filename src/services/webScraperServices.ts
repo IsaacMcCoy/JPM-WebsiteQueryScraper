@@ -1,7 +1,10 @@
 //UI and Server interaction for webScrapers
 
-import type { WebScraper } from "../types/webScraper.ts"
-import type { IgnoreRow } from "../types/ignoreRow.ts"
+import type { WebScraper } from '../types/webScraper.ts'
+import type { IgnoreRow } from '../types/ignoreRow.ts'
+import { useAlerts } from '../composables/useAlerts.ts'
+
+const { addAlert } = useAlerts()
 
 //Load all webScrapers from the database
 export async function loadAllWebScrapers(): Promise<WebScraper[]> {
@@ -30,7 +33,7 @@ export async function saveNewWebScraper(webScraper: WebScraper) {
     },
     body: JSON.stringify(webScraper)
   })
-  
+  addAlert("success", "New Web Scraper Saved")
   return response.json()
 }
 
@@ -43,6 +46,7 @@ export async function loadWebsiteFullContent(url: string): Promise<string> {
     }
   )
   if(!response.ok) {
+    addAlert("error", url)
     throw new Error(`extrcation request failed: ${response.status}`)
   }
 
@@ -56,9 +60,10 @@ export async function deleteWebScraper(id: number) {
   })
 
   if(!response.ok) {
+    addAlert("error", "Error Deleting Web Scraper")
     throw new Error(`Failed to delete scraper: ${response.status}`)
   }
-
+  addAlert("success", "Web Scraper Deleted")
   return response.json()
 }
 
@@ -72,9 +77,10 @@ export async function saveWebScraperChanges(id: number, updates: Partial<WebScra
     body: JSON.stringify(updates)
   })
   if (!response.ok) {
+    addAlert("error", "Error Saving Web Scraper Edits")
     throw new Error(`Failed to update scraper: ${response.status}`)
   }
-
+  addAlert("success", "Web Scraper Edits Saved")
   return response.json()
 }
 
