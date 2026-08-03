@@ -38,7 +38,7 @@ export async function handleExtractions(req: IncomingMessage, res: any, url: URL
     return true
   }
   
-  const result = htmlKeywordExtractor(html, keyword) //remember that this should only extract for HTML later (I think)
+  const result = htmlKeywordExtractor(html, keyword)
 
   res.setHeader(
     "Content-Type",
@@ -47,6 +47,10 @@ export async function handleExtractions(req: IncomingMessage, res: any, url: URL
 
   res.end(JSON.stringify(result))
 
-  console.log("GET exctraction successful")
-  return true
+  if (result[0]) {
+    console.log("GET exctraction successful")
+  } else{
+    console.log("GET exctraction successful, No Results Found")
+  }
+    return true
 }

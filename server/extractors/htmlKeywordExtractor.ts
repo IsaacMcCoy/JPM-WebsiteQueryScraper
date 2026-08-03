@@ -48,7 +48,7 @@ export function htmlKeywordExtractor(html: string, keyword: string) {
             : extractSnippet(text, index, keyword.length, 50)
       })
       
-      index = text.indexOf(keyword.toLowerCase(), index + keyword.length)
+      index = text.toLowerCase().indexOf(keyword.toLowerCase(), index + keyword.length)
     }
   })
 

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { WebScraper } from '../types/WebScraper.ts'
+import type { WebScraper } from '../types/webScraper.ts'
 import { loadAllWebScrapers, saveNewWebScraper, deleteWebScraper, saveWebScraperChanges } from '../services/webScraperServices'
 
 const webScraperList = ref<WebScraper[]>([])
@@ -15,7 +15,8 @@ export function useWebScraper() {
     url: '',
     credibility: 0,
     updateFrequency: '',
-    keyword: ''
+    keyword: '',
+    provider: 'html'
   })
   
   async function addNewWebScraper(addedWebScraper: WebScraper) {

@@ -23,8 +23,15 @@
       "updateFrequency": "yearly",
       "keyword": "ergon",
       "provider": "html"
+    },
+    {
+      "id": 1785767355366,
+      "url": "https://goldprice.org/",
+      "credibility": 95,
+      "updateFrequency": "hourly",
+      "keyword": "gold",
+      "provider": "playwright"
     }
   ],
-  "ignoreRows": [
-  ]
+  "ignoreRows": []
 }

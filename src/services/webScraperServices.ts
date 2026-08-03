@@ -1,4 +1,4 @@
-import type { WebScraper } from '../types/WebScraper.ts'
+import type { WebScraper } from '../types/webScraper.ts'
 import { useAlerts } from '../composables/useAlerts.ts'
 
 const { addAlert } = useAlerts()
