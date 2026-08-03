@@ -33,5 +33,15 @@
       "provider": "playwright"
     }
   ],
-  "ignoreRows": []
+  "ignoreRows": [],
+  "valueTrackers": [
+    {
+      "id": 1785767354949,
+      "url": "https://goldprice.org/",
+      "provider": "playwright",
+      "credibility": 99,
+      "updateFrequency": "always",
+      "valueId": "#goldchange .tick-value.price-value .gpoticker-price"
+    }
+  ]
 }
