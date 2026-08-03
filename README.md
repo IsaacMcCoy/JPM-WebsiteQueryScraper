@@ -6,22 +6,30 @@
 - npm
 - tsx (for running server)
 
-## Running
+## Development
 
 ```bash
 npm run dev
 npm run server
 ```
 
-## Building
+## Build
 
 ```bash
 npm run build
 ```
 
+## Preview
+
+```bash
+npm run preview
+```
 ## Technologies
 
 - Vue 3
 - TypeScript
 - Tailwind CSS
 - Vite
+- Tsx
+- Cheerio
+- Playwright
