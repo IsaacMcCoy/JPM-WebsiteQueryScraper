@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import type { ValueTracker } from '../types/valueTracker.ts'
-import { loadAllValueTrackers, getTrackedValue } from '../services/valueTrackerServices.ts'
+import { loadAllValueTrackers, getTrackedValue, saveNewValueTracker } from '../services/valueTrackerServices.ts'
 
 const valueTrackerList = ref<ValueTracker[]>([])
 
@@ -32,10 +32,32 @@ function startTrackerInterval(tracker: ValueTracker) {
 }
 
 //export function for other file's use
-export function useValueTrackers() {
+export function useValueTracker() {
+  const newValueTracker = ref<ValueTracker>({
+    url: '',
+    provider: "playwright",
+    credibility: 0,
+    updateFrequency: '',
+    valueId: '',
+    name: '',
+    message: ''
+  })
+  
+  async function addNewValueTracker(addedValueTracker: ValueTracker) {
+    
+    // If message exists and contains a blank string, delete it
+    if (addedValueTracker.message && addedValueTracker.message.replace(/\s+/g, "") === '') {
+      delete addedValueTracker.message
+    }
+
+    await saveNewValueTracker(addedValueTracker) //save added WebScraper to database
+  }
+
   return {
     valueTrackerList,
     valueTrackerReady,
-    startTrackerInterval
+    newValueTracker,
+    startTrackerInterval,
+    addNewValueTracker
   }
 }
