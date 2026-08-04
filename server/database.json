@@ -41,7 +41,8 @@
       "provider": "playwright",
       "credibility": 99,
       "updateFrequency": "always",
-      "valueId": "#goldchange .tick-value.price-value .gpoticker-price"
+      "valueId": "#goldchange .tick-value.price-value .gpoticker-price",
+      "name": "Gold Price"
     }
   ]
 }
