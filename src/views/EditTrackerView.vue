@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import AddScraperForm from '../components/AddScraperForm.vue'
-import EditScraperForm from '../components/EditScraperForm.vue'
-import DeleteScraperForm from '../components/DeleteScraperForm.vue'
+import AddTrackerForm from '../components/AddTrackerForm.vue'
 import { currentView } from '../composables/useViews'
 import { ref } from 'vue'
 
@@ -16,9 +14,9 @@ const editChoice = ref<EditOptions>(null)
     <!--Options-->
     <div v-if="editChoice===null" class="min-w-[300px] rounded-lg border border-gray-200">
       <div class="p-4  flex flex-col gap-3 bg-white rounded-t-lg">
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='add'">Add Web Scraper</button>
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='edit'">Edit Web Scraper</button>
-        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='delete'">Delete Web Scraper</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='add'">Add Value Tracker</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='edit'">Edit Value Tracker</button>
+        <button class="bg-gray-200 text-black border border-gray-300 rounded-lg px-3 py-2" @click="editChoice='delete'">Delete Value Tracker</button>
       </div>
 
       <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">
@@ -30,9 +28,8 @@ const editChoice = ref<EditOptions>(null)
     <!--Actual forms-->
     <div v-else class="min-w-[375px] min-h-[100px] rounded-lg border border-gray-200 p-0">
       
-      <AddScraperForm v-if="editChoice==='add'" />
-      <EditScraperForm v-if="editChoice==='edit'" />
-      <DeleteScraperForm v-if="editChoice==='delete'" />
+      <AddTrackerForm v-if="editChoice==='add'" />
+
 
       <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">
         <a class="hover:underline cursor-pointer" @click="editChoice=null">Return</a>
