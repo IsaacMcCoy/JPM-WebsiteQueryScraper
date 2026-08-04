@@ -22,19 +22,40 @@ export async function handleExtractions(req: IncomingMessage, res: any, url: URL
 
   let html: string
 
-  if (provider === "html") {
-    html = await htmlProvider(target)
+  try {
+    if (provider === "html") {
+      html = await htmlProvider(target)
 
-  } else if (provider === "playwright") {
-    html = await playwrightProvider(target)
+    } else if (provider === "playwright") {
+      html = await playwrightProvider(target)
 
-  } else {
+    } else {
 
-    res.writeHead(400)
+      res.writeHead(400)
+      res.end(JSON.stringify({
+        message: "Unknown provider"
+      }))
+
+      return true
+    }
+  } catch (err) {
+    
+    res.writeHead(500)
     res.end(JSON.stringify({
-      message: "Unknown provider"
+      message: "Provider failed"
     }))
 
+    console.log("GET extractions: Provider Failed")
+    return true
+  }
+  
+  if (!html) {
+    res.writeHead(502)
+    res.end(JSON.stringify({
+      message: "Failed to load page"
+    }))
+
+    console.log(`Failed loading ${target}`)
     return true
   }
   
