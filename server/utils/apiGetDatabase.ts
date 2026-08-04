@@ -3,10 +3,12 @@
 import { readFile, writeFile } from "node:fs/promises"
 import type { WebScraper } from '../../src/types/WebScraper.ts'
 import type { IgnoreRow } from "../../src/types/IgnoreRow.ts"
+import type { ValueTracker } from "../../src/types/valueTracker.ts"
 
 interface Database {
   webScrapers: WebScraper[]
   ignoreRows: IgnoreRow[]
+  valueTrackers: ValueTracker[]
 }
 
 const databasePath = "./server/database.json"

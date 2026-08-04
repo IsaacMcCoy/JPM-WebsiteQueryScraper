@@ -3,6 +3,8 @@ import { createServer } from 'node:http'
 import { handleWebScrapers } from './routes/handleWebScrapers.ts'
 import { handleIgnoreRows } from './routes/handleIgnoreRows.ts'
 import { handleExtractions } from './routes/handleExtraction.ts'
+import { handleTracking } from './routes/handleTracking.ts'
+import { handleValueTrackers } from './routes/handleValueTrackers.ts'
 
 const server = createServer(async (req, res) => {
 
@@ -31,6 +33,14 @@ const server = createServer(async (req, res) => {
   }
 
   if(await handleExtractions(req, res, url)) {
+    return
+  }
+
+  if(await handleValueTrackers(req, res, url)) {
+    return
+  }
+
+  if(await handleTracking(req, res, url)) {
     return
   }
 
