@@ -1,7 +1,7 @@
 import type { IncomingMessage } from 'node:http'
 import { htmlProvider } from '../providers/htmlScraper.ts'
 import { playwrightProvider } from '../providers/playwrightScraper.ts'
-import * as cheerio from "cheerio"
+import { htmlValueExtractor } from '../extractors/htmlValueExtractor.ts'
 
 export async function handleTracking(req: IncomingMessage, res: any, url: URL) {
   if(url.pathname !== "/api/tracking" || req.method !== "GET") {
@@ -38,11 +38,17 @@ export async function handleTracking(req: IncomingMessage, res: any, url: URL) {
     return true
   }
 
-  const $ = cheerio.load(html)
+  if (!html) {
+    res.writeHead(502)
+    res.end(JSON.stringify({
+      message: "Failed to load page"
+    }))
 
-  const result = $(valueId)
-    .first()
-    .text()
+    console.log(`Failed loading ${target}`)
+    return true
+  }
+
+  const result = htmlValueExtractor(html, valueId)
 
   res.setHeader(
     "Content-Type",
