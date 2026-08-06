@@ -1,16 +1,4 @@
-import { chromium } from "playwright"
-import type { Browser } from "playwright"
-
-let browser: Browser | null = null
-
-async function getBrowser() {
-  if (!browser) {
-    browser = await chromium.launch({
-      headless: false
-    })
-  }
-  return browser
-}
+import { getBrowser } from "../utils/getBrowser.ts"
 
 export async function playwrightProvider(url: string, locator?: string): Promise<string> {
 
