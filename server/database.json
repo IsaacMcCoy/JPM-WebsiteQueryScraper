@@ -43,6 +43,16 @@
       "updateFrequency": "always",
       "valueId": "#goldchange .tick-value.price-value .gpoticker-price",
       "name": "Gold Price"
+    },
+    {
+      "id": 1786029562808,
+      "url": "https://ergon.com/",
+      "provider": "playwright",
+      "credibility": 97,
+      "updateFrequency": "yearly",
+      "valueId": "div.owl-item.active:nth-of-type(5) > div.carousel-item > div.carousel-content > h3.carousel-title > a",
+      "name": "Ergon Test",
+      "message": "This is Ergon Refining. Here we test data to see if the message pops up"
     }
   ]
 }

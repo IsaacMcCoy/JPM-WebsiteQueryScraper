@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import type { ValueTracker } from '../types/valueTracker'
-import { useValueTrackers } from '../composables/useValueTracker'
+import { useValueTracker } from '../composables/useValueTracker'
 
-const { valueTrackerList, valueTrackerReady, startTrackerInterval } = useValueTrackers()
+const { valueTrackerList, valueTrackerReady, startTrackerInterval } = useValueTracker()
 
 const trackerRows = ref<ValueTracker[]>([])
 
@@ -25,9 +25,31 @@ onUnmounted(async() => {
 
 </script>
 <template>
-  <div v-for="tracker in trackerRows" :key="tracker.id">
+  <div class="w-[90vw] grid grid-cols-[17vw_17vw_17vw_17vw_17vw] rounded-md gap-4 items-stretch">
+    
+    <div v-for="tracker in trackerRows" :key="tracker.id" class="bg-white border border-black p-4 rounded-md gap-2 w-full">
+
+      <div class="border-b border-black text-center mb-1">
+        {{ tracker.name }}
+        &nbsp;
+        <a
+          :href="tracker.url" target="_blank"
+          class="underline hover:text-blue-400 hover:cursor-pointer"
+          @click.stop
+        >
+          ({{ tracker.url }})
+        </a>
+      </div>
+        
+      <div
+        class="border-b border-black text-center pb-1 mb-1"
+        v-if="tracker.lastKnownValue"
+      >
+        {{ tracker.lastKnownValue }}
+      </div>
+        
+      <div v-if="tracker.message">{{ tracker.message }}</div>
   
-    <div class="bg-white border border-black p-4 rounded-md gap-2"><span>{{ tracker.name }}: {{ tracker.lastKnownValue }}</span></div>
-  
+    </div>
   </div>
 </template>
