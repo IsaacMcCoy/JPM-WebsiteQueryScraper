@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AddNewForm from '../components/AddNewForm.vue'
-import EditForm from '../components/EditForm.vue'
-import DeleteForm from '../components/DeleteForm.vue'
+import AddScraperForm from '../components/AddScraperForm.vue'
+import EditScraperForm from '../components/EditScraperForm.vue'
+import DeleteScraperForm from '../components/DeleteScraperForm.vue'
 import { currentView } from '../composables/useViews'
 import { ref } from 'vue'
 
@@ -30,9 +30,9 @@ const editChoice = ref<EditOptions>(null)
     <!--Actual forms-->
     <div v-else class="min-w-[375px] min-h-[100px] rounded-lg border border-gray-200 p-0">
       
-      <AddNewForm v-if="editChoice==='add'" />
-      <EditForm v-if="editChoice==='edit'" />
-      <DeleteForm v-if="editChoice==='delete'" />
+      <AddScraperForm v-if="editChoice==='add'" />
+      <EditScraperForm v-if="editChoice==='edit'" />
+      <DeleteScraperForm v-if="editChoice==='delete'" />
 
       <div class="flex-1 bg-gray-100 text-gray-500 p-4 text-center rounded-b-lg">
         <a class="hover:underline cursor-pointer" @click="editChoice=null">Return</a>

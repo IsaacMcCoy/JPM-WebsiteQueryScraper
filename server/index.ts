@@ -5,6 +5,7 @@ import { handleIgnoreRows } from './routes/handleIgnoreRows.ts'
 import { handleExtractions } from './routes/handleExtraction.ts'
 import { handleTracking } from './routes/handleTracking.ts'
 import { handleValueTrackers } from './routes/handleValueTrackers.ts'
+import { handleSelectorLoad } from './routes/handleSelectorLoad.ts'
 
 const server = createServer(async (req, res) => {
 
@@ -41,6 +42,10 @@ const server = createServer(async (req, res) => {
   }
 
   if(await handleTracking(req, res, url)) {
+    return
+  }
+
+  if(await handleSelectorLoad(req, res, url)) {
     return
   }
 
