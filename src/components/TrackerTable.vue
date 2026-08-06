@@ -18,8 +18,8 @@ onMounted(async() => {
 
 onUnmounted(async() => {
   for (const row of trackerRows.value) {
-    clearInterval(row.interval)
-    delete row.interval
+    clearTimeout(row.timeout)
+    delete row.timeout
   }
 })
 

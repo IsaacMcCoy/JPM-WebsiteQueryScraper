@@ -7,6 +7,6 @@ export interface ValueTracker {
   valueId: string
   name: string
   message?: string
-  interval?: ReturnType<typeof setInterval>
+  timeout?: ReturnType<typeof setTimeout>
   lastKnownValue?: string
 }

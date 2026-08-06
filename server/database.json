@@ -40,7 +40,7 @@
       "url": "https://goldprice.org/",
       "provider": "playwright",
       "credibility": 99,
-      "updateFrequency": "always",
+      "updateFrequency": "every second",
       "valueId": "#goldchange .tick-value.price-value .gpoticker-price",
       "name": "Gold Price"
     },
